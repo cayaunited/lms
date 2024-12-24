@@ -1,7 +1,8 @@
 'use client';
 
-import { useReducer } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import {
   ActionIcon,
   Anchor,
@@ -21,19 +22,40 @@ import {
   faUserPlus,
   faXmark,
 } from '@fortawesome/free-solid-svg-icons';
+import { User } from '@supabase/supabase-js';
 import useTheme from '@/lib/useTheme';
 import useDyslexic from '@/lib/useDyslexic';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import { AvatarContext, AvatarDispatchContext } from '@/lib/avatarContext';
+import { createClient } from '@/lib/supabase/client';
 
-export function MainLayout({ children }:{ children: any }) {
-  let user = null;
+export default function MainLayout({ children }: { children: any }) {
+  const supabase = createClient();
+  const [user, setUser] = useState<User | null>(null);
+  const pathname = usePathname();
   
   const [avatar, dispatchAvatar] = useReducer((avatar: number, action: any) => {
     if (action.type === 'changed') return action.avatar;
-    return 0;
-  }, 0);
+    return -1;
+  }, -1);
+  
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await supabase.auth.getUser();
+        setUser(data?.user);
+        
+        if (avatar < 0 && data?.user) {
+          const { data: peopleData } = await supabase.from('people').select('avatar').eq('id', data.user.id);
+          if (!peopleData || peopleData.length === 0) return;
+          dispatchAvatar({ type: 'changed', avatar: peopleData[0].avatar });
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    })();
+  }, [pathname]);
   
   const { theme, resolver } = useTheme();
   const { headerFont } = useDyslexic();
@@ -126,7 +148,7 @@ export function MainLayout({ children }:{ children: any }) {
                   variant="transparent"
                 >
                   <Avatar
-                    src={`/avatars/${avatar}.png`}
+                    src={`/avatars/${avatar >= 0 ? avatar : 0}.png`}
                     alt=""
                   />
                 </ActionIcon>

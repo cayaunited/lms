@@ -6,16 +6,16 @@ import '@mantine/tiptap/styles.css';
 import { config } from '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import '@/app/global.css';
-import { MainLayout } from '@/components/MainLayout';
+import MainLayout from '@/components/MainLayout';
 
 config.autoAddCss = false;
 
 export const metadata = {
   title: 'Caya',
-  description: '',
+  description: 'description',
 };
 
-export default async function RootLayout({ children }: { children: any }) {
+export default  function RootLayout({ children }: { children: any }) {
   return <html lang="en" {...mantineHtmlProps}>
     <head>
       <ColorSchemeScript />

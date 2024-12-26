@@ -3,32 +3,26 @@
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
 
-export async function signUpWithEmail(name: string, email: string, role: string, password: string) {
+export async function signUpWithEmail(name: string, email: string, role: string, password?: string) {
   try {
     const supabase = await createClient();
-    const { data, error: signUpError } = await supabase.auth.signUp({ email, password });
-    if (signUpError) return signUpError.code;
     
-    const { error: peopleError } = await supabase.from('people').insert({
-      id: data.user?.id,
-      name,
-      role: role === 'teacher' ? 1 : 0,
-      avatar: 0,
-    });
-    
-    if (peopleError) return peopleError.code;
-    
-    const { error: profileError } = await supabase.from('profiles').insert({
-      id: data.user?.id,
-      biography: '',
-      majors: [],
-      minors: [],
-      semesters: null,
-      organizations: [],
-      hobbies: [],
-    });
-    
-    if (profileError) return profileError.code;
+    if (password) {
+      const { error: signUpError } = await supabase.auth.signUp({
+        email,
+        password,
+        options: { data: { name, role } },
+      });
+      
+      if (signUpError) return signUpError.code;
+    } else {
+      const { error: signUpError } = await supabase.auth.signInWithOtp({
+        email,
+        options: { data: { name, role } },
+      });
+      
+      if (signUpError) return signUpError.code;
+    }
     
     revalidatePath('/', 'layout');
   } catch (error) {
@@ -36,12 +30,18 @@ export async function signUpWithEmail(name: string, email: string, role: string,
   }
 }
 
-export async function signInWithEmail(email: string, password: string) {
+export async function signInWithEmail(email: string, password?: string) {
   try {
     const supabase = await createClient();
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
     
-    if (error) return error.code;
+    if (password) {
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) return error.code;
+    } else {
+      const { error } = await supabase.auth.signInWithOtp({ email });
+      if (error) return error.code;
+    }
+    
     revalidatePath('/', 'layout');
   } catch (error) {
     return error;

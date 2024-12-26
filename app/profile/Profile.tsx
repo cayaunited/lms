@@ -1,7 +1,6 @@
 'use client';
 
 import { useContext, useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import {
   ActionIcon,
   Avatar,
@@ -43,12 +42,9 @@ import { createClient } from '@/lib/supabase/client';
 
 export default function Profile() {
   const supabase = createClient();
-  const router = useRouter();
   const [account, setAccount] = useState<any>({});
   const [selectedAvatar, selectAvatar] = useState<string | null>('0');
   const dispatchAvatar = useContext(AvatarDispatchContext);
-  const [usesGoogle, setUsesGoogle] = useState(false);
-  const [usesPassword, setUsesPassword] = useState(false);
   
   useEffect(() => {
     (async () => {
@@ -82,37 +78,6 @@ export default function Profile() {
       }
     })();
   }, []);
-  
-  // searchFirestore(() => doc(db, 'people', user!.uid), async (q: any) => {
-  //   const accountDocument = await getDoc(q);
-  //   const userToken = await user!.getIdTokenResult();
-  //   setUsesGoogle(userToken.signInProvider === 'google.com');
-  //   setUsesPassword(!!userToken.claims.usesPassword);
-    
-  //   const { name, email, avatar } = accountDocument.data() as any;
-    
-  //   if (!accountDocument.exists()) {
-  //     showNotification(false, 'Failed to load profile', 'Sorry, we couldn\'t load your profile');
-  //     return;
-  //   }
-    
-  //   const loadedAccount: any = { name, email, avatar };
-  //   selectAvatar(`${avatar}`);
-  //   const profileDocument = await getDoc(doc(db, 'people', user!.uid, 'profile', user!.uid));
-    
-  //   if (profileDocument.exists()) {
-  //     const { biography, majors, minors, semesters, organizations, hobbies }
-  //       = profileDocument.data() as any;
-  //     loadedAccount.biography = biography;
-  //     loadedAccount.majors = majors;
-  //     loadedAccount.minors = minors;
-  //     loadedAccount.semesters = semesters;
-  //     loadedAccount.organizations = organizations;
-  //     loadedAccount.hobbies = hobbies;
-  //   }
-    
-  //   setAccount(loadedAccount);
-  // });
   
   const { headerFont } = useDyslexic();
   const [avatarOpened, { open: openAvatar, close: closeAvatar }] = useDisclosure(false);
@@ -214,28 +179,41 @@ export default function Profile() {
         const { error } = await supabase.from('people').update({ name }).eq('id', account.id);
         
         if (error) {
-          showNotification(false, 'Failed to save account', 'Sorry, we couldn\'t save the changes to your account');
-          console.error(error);
+          showNotification(false, 'Failed to save name', 'Sorry, we couldn\'t save the change to your name');
           return;
         }
         
         newAccount.name = name;
       }
       
-      // if (usesPassword && password && currentPassword) {
-      //   await reauthenticateWithCredential(user!, EmailAuthProvider.credential(user!.email!, currentPassword));
-      //   await updatePassword(user!, password);
-      // }
+      if (password && currentPassword) {
+        await supabase.auth.signOut();
+        const { error } = await supabase.auth.signInWithPassword({
+          email: account.email,
+          password: currentPassword,
+        });
+        
+        if (error) {
+          showNotification(false, 'Failed to change password', 'The current password you gave is incorrect. Try checking the spelling of your password');
+          return;
+        }
+        
+        await supabase.auth.updateUser({ password });
+      }
       
-      // if (!usesGoogle && email) {
-      //   await updateEmail(user!, email);
-      //   await updateDoc(doc(db, 'people', user!.uid), { email });
-      //   newAccount.email = email;
-      //   window.localStorage.setItem('roleForSignIn', 'exists');
-      //   await sendEmailVerification(user!,
-      //     { url: DEVELOPMENT ? 'http://localhost:3000/verified' : 'https://cayaunited.app/verified' });
-      //   router.push('/verify?sent');
-      // }
+      if (email) {
+        const { data } = await supabase.auth.getUser();
+        const now = Date.now();
+        const lastSignIn = new Date(data.user?.last_sign_in_at ?? now);
+        
+        if (now - lastSignIn.getTime() <= 1000 * 60 * 10) {
+          await supabase.auth.updateUser({ email });
+          showNotification(true, 'Sent confirmation email', 'Please check your email and click the link to confirm the change of your email address');
+        } else {
+          showNotification(false, 'Failed to change email', 'Please sign out and sign in again before changing your email');
+          return;
+        }
+      }
       
       setAccount(newAccount);
       closeAccount();
@@ -448,10 +426,27 @@ export default function Profile() {
             <FontAwesomeIcon icon={faXmark} />
           </ActionIcon>}
         />
+        <PasswordInput
+          key={accountForm.key('password')}
+          {...accountForm.getInputProps('password')}
+          label="new password"
+          placeholder="secure identity"
+          description="Leave empty if you don't want to change your password. Must have a lowercase letter, an uppercase letter, a number, a special symbol, and at least 8 characters total"
+          leftSection={<FontAwesomeIcon icon={faKey} />}
+          mt="md"
+        />
+        <PasswordInput
+          key={accountForm.key('currentPassword')}
+          {...accountForm.getInputProps('currentPassword')}
+          display={accountForm.getValues().password ? 'block' : 'none'}
+          label="current password"
+          placeholder="secure identity"
+          leftSection={<FontAwesomeIcon icon={faCheckDouble} />}
+          mt="md"
+        />
         <TextInput
           key={accountForm.key('email')}
           {...accountForm.getInputProps('email')}
-          display={usesGoogle ? 'none' : 'block'}
           label="change email"
           placeholder="inthemaking@cayaunited.app"
           description="Leave empty if you don't want to change your email. Please sign out then sign in again before you change your email. You will need to verify your new email"
@@ -462,25 +457,6 @@ export default function Profile() {
           >
             <FontAwesomeIcon icon={faXmark} />
           </ActionIcon>}
-          mt="md"
-        />
-        <PasswordInput
-          key={accountForm.key('password')}
-          {...accountForm.getInputProps('password')}
-          display={usesPassword ? 'block' : 'none'}
-          label="change password"
-          placeholder="secure identity"
-          description="Leave empty if you don't want to change your password. Must have a lowercase letter, an uppercase letter, a number, a special symbol, and at least 8 characters total"
-          leftSection={<FontAwesomeIcon icon={faKey} />}
-          mt="md"
-        />
-        <PasswordInput
-          key={accountForm.key('currentPassword')}
-          {...accountForm.getInputProps('currentPassword')}
-          display={usesPassword ? 'block' : 'none'}
-          label="current password"
-          placeholder="secure identity"
-          leftSection={<FontAwesomeIcon icon={faCheckDouble} />}
           mt="md"
         />
         <Group

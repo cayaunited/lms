@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import {
   Anchor,
   Button,
@@ -20,7 +19,6 @@ import {
 import { useForm } from '@mantine/form';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckDouble, faEnvelope, faKey, faUser, faUserPlus } from '@fortawesome/free-solid-svg-icons';
-import GoogleButton from '@/components/GoogleButton';
 import EmailSignInButton from '@/components/EmailSignInButton';
 import accountValidation from '@/lib/validation/account';
 import showNotification from '@/lib/showNotification';
@@ -53,18 +51,22 @@ export default function SignUp({ signUpWithEmail }: { signUpWithEmail: any }) {
     if (!typedPassword && form.values.password.length > 0) setTypedPassword(true);
   }, [form.values.password]);
   
-  const router = useRouter();
-  
   const signUp = async ({ name, email, password, role }:
     { name: string, email: string, password?: string, role: string }) => {
     try {
       const error = await signUpWithEmail(name, email, role, password);
+      window.localStorage.setItem('nameForSignIn', name);
+      window.localStorage.setItem('roleForSignIn', role);
       
-      if (error) {
+      if (error && error !== '42501') {
         let errorName = 'Error';
         let message = error;
         
         switch (error) {
+          case 'user_already_exists':
+            errorName = 'Email already in use';
+            message = 'The email you gave is already used by an account. Try using a different email';
+            break;
           case 'invalid_credentials':
             errorName = 'Incorrect email or password';
             message = 'The email or password you gave was incorrect. Try checking the spelling of your email and password';
@@ -73,9 +75,7 @@ export default function SignUp({ signUpWithEmail }: { signUpWithEmail: any }) {
         
         showNotification(false, errorName, message);
       }
-      else if (password) router.push('/dashboard');
-      // else if (password) router.push('/verify?sent');
-      // else showNotification(true, 'Email sent', 'A sign up link was emailed to you');
+      else showNotification(true, 'Sent verification email', 'Please check your email and click the link to verify your email address, then sign in');
     } catch (error) {
       showNotification(false, 'Failed to sign up', `${error}`);
     }
@@ -180,10 +180,6 @@ export default function SignUp({ signUpWithEmail }: { signUpWithEmail: any }) {
             my="xs"
           />
           <Stack align="center">
-            <GoogleButton
-              action="up"
-              onClick={() => {}}
-            />
             <EmailSignInButton
               action="up"
               disabled={!form.isValid('email')}

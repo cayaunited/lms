@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import {
   Anchor,
   Button,
@@ -19,12 +19,14 @@ import {
 import { useForm } from '@mantine/form';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope, faKey, faRightToBracket } from '@fortawesome/free-solid-svg-icons';
-import GoogleButton from '@/components/GoogleButton';
 import EmailSignInButton from '@/components/EmailSignInButton';
 import accountValidation from '@/lib/validation/account';
 import showNotification from '@/lib/showNotification';
+import { createClient } from '@/lib/supabase/client';
+import createPerson from '@/lib/supabase/createPerson';
 
 export default function SignIn({ signInWithEmail }: { signInWithEmail: any }) {
+  const supabase = createClient();
   const [typedEmail, setTypedEmail] = useState(false);
   
   const form = useForm({
@@ -44,6 +46,46 @@ export default function SignIn({ signInWithEmail }: { signInWithEmail: any }) {
   }, [form.values.email]);
   
   const router = useRouter();
+  const params = useSearchParams();
+  
+  const createAccountData = async () => {
+    const { data: userData } = await supabase.auth.getUser();
+    if (!userData.user) return false;
+    const { data, error: peopleError } = await supabase.from('people').select().eq('id', userData.user.id);
+    
+    if (peopleError) {
+      showNotification(false, 'Failed to sign in', `${peopleError}`);
+      return false;
+    }
+    
+    if (!data.length) {
+      let name = window.localStorage.getItem('nameForSignIn')
+        || window.prompt('What is your name?');
+      let role = window.localStorage.getItem('roleForSignIn')
+        || window.prompt('What is your role? Either "student" or "teacher"', 'student');
+      window.localStorage.removeItem('nameForSignIn');
+      window.localStorage.removeItem('roleForSignIn');
+      const creationError = await createPerson(supabase, userData.user.id, name ?? '', role === 'teacher' ? 1 : 0);
+      
+      if (creationError) {
+        showNotification(false, 'Failed to sign in', `${peopleError}`);
+        return false;
+      }
+    }
+  };
+  
+  useEffect(() => {
+    const token_hash = params.get('token_hash');
+    const type = params.get('type');
+    if (!token_hash || type !== 'magiclink') return;
+    
+    (async () => {
+      const { error } = await supabase.auth.verifyOtp({ token_hash, type: 'magiclink' });
+      if (error) showNotification(false, 'Failed to sign in', `${error}`);
+      if (!createAccountData()) return;
+      router.push('/dashboard');
+    })();
+  }, []);
   
   const signIn = async ({ email, password }:
     { email: string, password?: string }) => {
@@ -59,12 +101,19 @@ export default function SignIn({ signInWithEmail }: { signInWithEmail: any }) {
             errorName = 'Incorrect email or password';
             message = 'The email or password you gave was incorrect. Try checking the spelling of your email and password';
             break;
+          case 'email_not_confirmed':
+            errorName = 'Email not yet verified';
+            message = 'Please check your email and click the link to verify your email address';
+            break;
         }
         
         showNotification(false, errorName, message);
       }
-      else if (password) router.push('/dashboard');
-      // else showNotification(true, 'Email sent', 'A sign in link was emailed to you');
+      else if (password) {
+        if (!createAccountData()) return;
+        router.push('/dashboard');
+      }
+      else showNotification(true, 'Sent sign in email', 'A sign in link was emailed to you');
     } catch (error) {
       showNotification(false, 'Failed to sign in', `${error}`);
     }
@@ -144,10 +193,6 @@ export default function SignIn({ signInWithEmail }: { signInWithEmail: any }) {
             my="xs"
           />
           <Stack align="center">
-            <GoogleButton
-              action="in"
-              onClick={() => {}}
-            />
             <EmailSignInButton
               action="in"
               disabled={!form.isValid('email')}

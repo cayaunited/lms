@@ -285,7 +285,7 @@ export default function Assignment({ courseID, assignmentID }: { courseID: strin
           date_due: dateDue,
           content,
           section,
-        }).eq('id', assignmentID);
+        }).eq('id', assignment.id);
         
         if (updateError) {
           showNotification(false, 'Failed to save assignment', 'Sorry, we couldn\'t save the assignment');

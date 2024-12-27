@@ -29,7 +29,7 @@ lowlight.register({ c, cpp, python, java, js });
 export default function RichViewer({ content = '', plainText = false }:{ content?: any, plainText?: boolean }) {
   const editor = useEditor({
     extensions: [
-      StarterKit,
+      StarterKit.configure({ codeBlock: false }),
       CodeBlockLowlight.configure({ lowlight, defaultLanguage: 'c' }),
       Image,
       Link.configure({ openOnClick: false }),

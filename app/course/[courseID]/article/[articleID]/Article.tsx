@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   Button,
@@ -78,66 +78,68 @@ export default function Article({ courseID, articleID }: { courseID: string, art
   useDocumentTitle(pageTitle);
   const router = useRouter();
   
-  // searchFirestore(() => {
-  //   if (articleID === 'new') return null;
-  //   return doc(db, 'courses', courseID, 'articles', articleID);
-  // }, async (q: any) => {
-  //   let courseTeachers: any[] = [];
-  //   let courseAssistants: any[] = [];
+  useEffect(() => {
+    if (!articleEditor) return;
     
-  //   try {
-  //     const courseDocument = await getDoc(doc(db, 'courses', courseID));
-  //     if (!courseDocument.exists()) return;
-  //     const { teachers, assistants, sections } = courseDocument.data() as any;
-      
-  //     courseTeachers = teachers;
-  //     courseAssistants = assistants;
-  //     setCourse({ teachers, assistants, sections });
-  //   } catch (error) {
-  //     showNotification(false, 'Failed to load course', 'Sorry, we couldn\'t load the course');
-  //     console.error(error);
-  //   }
-      
-  //   const userToken = await user!.getIdTokenResult();
-  //   const role = userToken.claims.isStudent ? 'student' : 'teacher';
-    
-  //   if (!q) {
-  //     setArticle({
-  //       name: 'New Article',
-  //       owner: user!.uid,
-  //       dateCreated: new Date(),
-  //       dateUpdated: new Date(),
-  //       approved: role === 'teacher' && courseTeachers.includes(user!.uid)
-  //         || role === 'student' && courseAssistants.includes(user!.uid),
-  //       content: '',
-  //     });
-      
-  //     toggleEditable();
-  //     return;
-  //   }
-    
-  //   try {
-  //     const articleDocument = await getDoc(q);
-  //     if (!articleDocument.exists()) return;
-  //     const { owner, name, date_created, date_updated, approved, content } = articleDocument.data() as any;
-      
-  //     setPageTitle(`${name} | Caya`);
-  //     articleEditor.commands.setContent(content);
-      
-  //     setArticle({
-  //       id: articleID,
-  //       owner,
-  //       name,
-  //       dateCreated: date_created.toDate(),
-  //       dateUpdated: date_updated.toDate(),
-  //       approved,
-  //       content,
-  //     });
-  //   } catch (error) {
-  //     showNotification(false, 'Failed to load article', 'Sorry, we couldn\'t load the article');
-  //     console.error(error);
-  //   }
-  // });
+    (async () => {
+      try {
+        const { data: userData } = await supabase.auth.getUser();
+        if (!userData.user) return;
+        const uid = userData.user.id;
+        
+        const { data: connectionData, error: connectionError } = await supabase.from('people_to_courses')
+          .select('role').eq('person_id', uid).eq('course_id', courseID);
+        
+        if (connectionError) {
+          showNotification(false, 'Failed to load article', 'Sorry, we couldn\'t load your article');
+          console.log(connectionError);
+          return;
+        }
+        
+        setUser({ id: uid, role: connectionData[0].role });
+        
+        if (articleID === 'new') {
+          setArticle({
+            owner: uid,
+            name: 'New Article',
+            dateCreated: new Date(),
+            dateUpdated: new Date(),
+            content: '',
+            approved: connectionData[0].role > 0,
+          });
+          
+          if (connectionData[0].role > 0) toggleEditable();
+        } else {
+          const { data: articleData, error: articleError } = await supabase.from('articles')
+            .select().eq('id', articleID);
+          
+          if (articleError) {
+            showNotification(false, 'Failed to load article', 'Sorry, we couldn\'t load your article');
+            console.log(articleError);
+            return;
+          }
+          
+          const { name, date_created, date_updated, content } = articleData[0];
+          
+          setArticle({
+            id: articleID,
+            owner: uid,
+            name,
+            dateCreated: new Date(date_created),
+            dateUpdated: new Date(date_updated),
+            content,
+            approved: connectionData[0].role > 0,
+          });
+          
+          setPageTitle(`${name} | Caya`);
+          articleEditor.commands.setContent(content);
+        }
+      } catch (error) {
+        showNotification(false, 'Failed to load article', 'Sorry, we couldn\'t load your article');
+        console.log(error);
+      }
+    })();
+  }, [articleEditor]);
   
   const canApprove = user?.role > 0;
   const canEdit = canApprove || article?.owner === user?.id;
@@ -150,24 +152,36 @@ export default function Article({ courseID, articleID }: { courseID: string, art
       setPageTitle(`${name} | Caya`);
       
       if (!article.id) {
-        // const assignmentDocument = await addDoc(collection(db, 'courses', courseID, 'articles'), {
-        //   owner: user!.uid,
-        //   name,
-        //   date_created: new Date(),
-        //   date_updated: new Date(),
-        //   content,
-        //   approved: role === 'teacher' && course?.teachers.includes(user!.uid)
-        //     || role === 'student' && course?.assistants.includes(user!.uid),
-        //   reported: false,
-        // });
+        id = crypto.randomUUID();
         
-        // id = assignmentDocument.id;
+        const { error: insertError } = await supabase.from('articles').insert({
+          id,
+          course_id: courseID,
+          owner: user.id,
+          name,
+          date_created: new Date(),
+          date_updated: new Date(),
+          content,
+          approved: user.role > 0,
+        });
+        
+        if (insertError) {
+          showNotification(false, 'Failed to create article', 'Sorry, we couldn\'t create the article');
+          console.log(insertError);
+          return;
+        }
       } else {
-        // await updateDoc(doc(db, 'courses', courseID, 'articles', article.id), {
-        //   name,
-        //   date_updated: new Date(),
-        //   content,
-        // });
+        const { error: updateError } = await supabase.from('articles').update({
+          name,
+          date_updated: new Date(),
+          content,
+        }).eq('id', article.id);
+        
+        if (updateError) {
+          showNotification(false, 'Failed to save article', 'Sorry, we couldn\'t save the article');
+          console.log(updateError);
+          return;
+        }
       }
       
       setEditable(false);
@@ -182,7 +196,7 @@ export default function Article({ courseID, articleID }: { courseID: string, art
         dateUpdated: new Date(),
       });
     } catch (error) {
-      const action = article.id ? 'save' : 'post';
+      const action = article.id ? 'save' : 'create';
       showNotification(false, `Failed to ${action} article`, `Sorry, we couldn't ${action} the article`);
       console.error(error);
     }
@@ -190,7 +204,15 @@ export default function Article({ courseID, articleID }: { courseID: string, art
   
   const deleteArticle = async () => {
     try {
-      // await deleteDoc(doc(db, 'courses', courseID, 'articles', article.id));
+      const { error: deleteError } = await supabase.from('articles')
+        .delete().eq('id', article.id);
+      
+      if (deleteError) {
+        showNotification(false, 'Failed to delete article', 'Sorry, we couldn\'t delete your article');
+        console.log(deleteError);
+        return;
+      }
+      
       router.push(`/course/${courseID}`);
     } catch (error) {
       showNotification(false, 'Failed to delete article', 'Sorry, we couldn\'t delete the article');
@@ -200,11 +222,18 @@ export default function Article({ courseID, articleID }: { courseID: string, art
   
   const approveArticle = async () => {
     try {
-      // await updateDoc(doc(db, 'courses', courseID, 'articles', article.id),
-      //   { approved: true });
+      const { error: updateError } = await supabase.from('articles')
+        .update({ approved: true }).eq('id', article.id);
+      
+      if (updateError) {
+        showNotification(false, 'Failed to approve article', 'Sorry, we couldn\'t approve the article');
+        console.log(updateError);
+        return;
+      }
+      
       setArticle({ ...article, approved: true });
     } catch (error) {
-      showNotification(false, 'Failed to approve', 'Sorry, we couldn\'t approve the article');
+      showNotification(false, 'Failed to approve article', 'Sorry, we couldn\'t approve the article');
       console.error(error);
     }
   };
@@ -335,7 +364,7 @@ export default function Article({ courseID, articleID }: { courseID: string, art
     </Paper>)}
     
     {
-      user.role > 0 && <Modal
+      user?.role > 0 && <Modal
         opened={deleteOpened}
         onClose={closeDelete}
         title={
@@ -384,7 +413,7 @@ export default function Article({ courseID, articleID }: { courseID: string, art
     >
       <form onSubmit={(event) => event.preventDefault()}>
         {
-          user.role === 0 && <Checkbox
+          user?.role === 0 && <Checkbox
             label="anonymous"
             description="Only teachers and TAs can see you posted if it's anonymous"
             mb="md"

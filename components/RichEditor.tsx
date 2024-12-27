@@ -38,7 +38,7 @@ export default function RichEditor({ setEditor, characterLimit, defaultContent =
   { setEditor: Function, characterLimit: number, defaultContent?: any, showControls?: boolean, autoFocus?: boolean }) {
   const editor = useEditor({
     extensions: [
-      StarterKit,
+      StarterKit.configure({ codeBlock: false }),
       CharacterCount.configure({ limit: characterLimit }),
       CodeBlockLowlight.configure({ lowlight, defaultLanguage: 'c' }),
       Image,

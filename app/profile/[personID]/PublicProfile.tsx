@@ -40,7 +40,7 @@ export default function PublicProfile({ personID }:{ personID: string }) {
         });
       } catch (error) {
         showNotification(false, 'Failed to load profile', 'Sorry, we couldn\'t load your profile');
-        console.error(error);
+        console.log(error);
       }
     })();
   }, []);

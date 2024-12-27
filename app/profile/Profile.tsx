@@ -74,7 +74,7 @@ export default function Profile() {
         });
       } catch (error) {
         showNotification(false, 'Failed to load profile', 'Sorry, we couldn\'t load your profile');
-        console.error(error);
+        console.log(error);
       }
     })();
   }, []);
@@ -152,7 +152,7 @@ export default function Profile() {
       
       if (error) {
         showNotification(false, 'Failed to save avatar', 'Sorry, we couldn\'t save the change to your avatar');
-        console.error(error);
+        console.log(error);
         return;
       }
       
@@ -161,7 +161,7 @@ export default function Profile() {
       closeAvatar();
     } catch (error) {
       showNotification(false, 'Failed to save avatar', 'Sorry, we couldn\'t save the change to your avatar');
-      console.error(error);
+      console.log(error);
     }
   };
   
@@ -219,7 +219,7 @@ export default function Profile() {
       closeAccount();
     } catch (error) {
       showNotification(false, 'Failed to save account', 'Sorry, we couldn\'t save the changes to your account');
-      console.error(error);
+      console.log(error);
     }
   };
   
@@ -239,7 +239,7 @@ export default function Profile() {
       
       if (error) {
         showNotification(false, 'Failed to save details', 'Sorry, we couldn\'t save the changes to your details');
-        console.error(error);
+        console.log(error);
         return;
       }
       
@@ -254,7 +254,7 @@ export default function Profile() {
       closeDetails();
     } catch (error) {
       showNotification(false, 'Failed to save details', 'Sorry, we couldn\'t save the changes to your details');
-      console.error(error);
+      console.log(error);
     }
   };
   

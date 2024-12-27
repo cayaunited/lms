@@ -52,7 +52,7 @@ export default function MainLayout({ children }: { children: any }) {
           dispatchAvatar({ type: 'changed', avatar: peopleData[0].avatar });
         }
       } catch (error) {
-        console.error(error);
+        console.log(error);
       }
     })();
   }, [pathname]);

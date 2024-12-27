@@ -153,6 +153,7 @@ export default function useTheme() {
         defaultProps: {
           size: 'md',
           variant: 'filled',
+          allowDeselect: false,
         },
       }),
       Textarea: Textarea.extend({

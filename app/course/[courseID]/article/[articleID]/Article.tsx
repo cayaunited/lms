@@ -262,7 +262,7 @@ export default function Article({ courseID, articleID }: { courseID: string, art
         last updated on {formatDateWithTime(article?.dateUpdated ?? new Date())}
       </Text>
       {
-        canEdit && <Group>
+        canEdit && article?.id && <Group>
           <Button
             color="blue"
             variant="outline"

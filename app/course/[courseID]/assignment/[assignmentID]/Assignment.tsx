@@ -377,7 +377,7 @@ export default function Assignment({ courseID, assignmentID }: { courseID: strin
       mb={(isMobile && !canEdit) ? 0 : 'md'}
     >
       {
-        canEdit && <Group>
+        canEdit && assignment?.id && <Group>
           <Button
             color="blue"
             variant="outline"

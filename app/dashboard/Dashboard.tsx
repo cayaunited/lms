@@ -68,6 +68,7 @@ export default function Dashboard() {
         
         for (const course of coursesData) {
           const { data: assignmentsData, error: assignmentsError } = await supabase.from('assignments').select()
+            .eq('course_id', course.id)
             .in('section', ['all', ...connectionData.find((connection) => connection.course_id === course.id).sections])
             .gte('date_due', `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`);
           

@@ -13,6 +13,7 @@ import {
   PasswordInput,
   SegmentedControl,
   Select,
+  Tabs,
   Textarea,
   TextInput,
 } from '@mantine/core';
@@ -154,6 +155,11 @@ export default function useTheme() {
           size: 'md',
           variant: 'filled',
           allowDeselect: false,
+        },
+      }),
+      Tabs: Tabs.extend({
+        defaultProps: {
+          radius: 0,
         },
       }),
       Textarea: Textarea.extend({

@@ -29,6 +29,25 @@
   border-color: light-dark(var(--mantine-color-gray-4), var(--mantine-color-dark-4));
 }
 
+.mantine-Tabs-tab {
+  border-bottom-width: 0.25rem;
+  border-color: light-dark(var(--mantine-color-gray-4), var(--mantine-color-dark-4));
+}
+
+.mantine-Tabs-tab:where([data-active]) {
+  border-color: light-dark(var(--tabs-color), var(--tabs-color));
+}
+
+.mantine-Tabs-list {
+  overflow-x: auto;
+  flex-wrap: nowrap;
+  z-index: var(--app-shell-footer-z-index);
+}
+
+.mantine-Tabs-list::before {
+  border: none;
+}
+
 .mantine-Divider-label::before,
 .mantine-Divider-label::after {
   border-color: light-dark(var(--mantine-color-gray-4), var(--mantine-color-dark-4));

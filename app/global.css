@@ -109,6 +109,10 @@ iframe {
   }
 }
 
+.approval-check .mantine-Checkbox-input:not(:checked) {
+  border-color: var(--mantine-color-orange-outline);
+}
+
 .mantine-RichTextEditor-content {
   overflow-x: auto;
 }

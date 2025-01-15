@@ -6,6 +6,7 @@ import {
   Text,
 } from '@mantine/core';
 import { TabContext } from '@/lib/tabContext';
+import ArticlesTab from './ArticlesTab';
 
 export default function Course({ courseID }: { courseID: string }) {
   const tab = useContext(TabContext);
@@ -16,9 +17,7 @@ export default function Course({ courseID }: { courseID: string }) {
         materials
       </Tabs.Panel>
       
-      <Tabs.Panel value="articles">
-        articles
-      </Tabs.Panel>
+      <ArticlesTab />
       
       <Tabs.Panel value="discussions">
         discussions

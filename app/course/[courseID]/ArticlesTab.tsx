@@ -79,11 +79,9 @@ export default function ArticlesTab() {
       >
         <Paper
           withBorder
-          radius="md"
           p="md"
           h="100%"
-          className='hover-card'
-          style={{ borderWidth: 3 }}
+          className="hover-card"
         >
           <Text
             size="xl"
@@ -127,7 +125,7 @@ export default function ArticlesTab() {
       <Button
         color="pink"
         leftSection={<FontAwesomeIcon icon={faCloudArrowDown} />}
-      >load more articles</Button>
+      >load more</Button>
     </Group>
   </Tabs.Panel>;
 }

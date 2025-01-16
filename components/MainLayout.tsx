@@ -19,10 +19,12 @@ import { Notifications } from '@mantine/notifications';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faBars,
+  faChartSimple,
   faComments,
   faExclamationCircle,
   faFileLines,
   faFolder,
+  faListCheck,
   faPersonChalkboard,
   faRightFromBracket,
   faRightToBracket,
@@ -196,10 +198,20 @@ export default function MainLayout({ children }: { children: any }) {
                       leftSection={<FontAwesomeIcon icon={faComments} size="lg" />}
                     >discussions</Tabs.Tab>
                     <Tabs.Tab
+                      value="assignments"
+                      fz="md"
+                      leftSection={<FontAwesomeIcon icon={faListCheck} size="lg" />}
+                    >assignments</Tabs.Tab>
+                    <Tabs.Tab
                       value="sessions"
                       fz="md"
                       leftSection={<FontAwesomeIcon icon={faPersonChalkboard} size="lg" />}
                     >study sessions</Tabs.Tab>
+                    <Tabs.Tab
+                      value="grades"
+                      fz="md"
+                      leftSection={<FontAwesomeIcon icon={faChartSimple} size="lg" />}
+                    >grades</Tabs.Tab>
                     <Tabs.Tab
                       value="people"
                       fz="md"

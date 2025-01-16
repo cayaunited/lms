@@ -346,11 +346,10 @@ export default function Article({ courseID, articleID }: { courseID: string, art
     {comments.map((comment: any, i: number) => <Paper
       key={comment.id}
       withBorder
-      radius="md"
       p="md"
       mt="md"
       ml={comment.parent ? 'xl' : 0}
-      style={{ borderWidth: rem(4), borderColor: comment.fromStudent ? undefined : 'var(--mantine-color-pink-outline)' }}
+      style={{ borderColor: comment.fromStudent ? undefined : 'var(--mantine-color-pink-outline)' }}
     >
       <Text fw={700}>commented {comment.anonymous ? 'anonymously' : 'by Example Person'}</Text>
       <Text mb="md">on {formatDateWithTime(comment.dateCreated)}</Text>

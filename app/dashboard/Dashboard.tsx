@@ -22,7 +22,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faPencil, faPlus, faXmark } from '@fortawesome/free-solid-svg-icons';
 import useDyslexic from '@/lib/useDyslexic';
 import icons from '@/lib/icons';
-import { formatDateWithTime, formatTime } from '@/lib/formatDate';
+import { formatDate, formatDateWithTime, formatTime } from '@/lib/formatDate';
 import colors from '@/lib/colors';
 import courseValidation from '@/lib/validation/course';
 import showNotification from '@/lib/showNotification';
@@ -444,7 +444,7 @@ export default function Dashboard() {
                 gap={0}
               >
                 <Text size="lg"><strong>{session.number}</strong> at {session.location}</Text>
-                <Text>{formatDateWithTime(session.startTime)}, until {formatTime(session.endTime)}</Text>
+                <Text>{formatDate(session.startTime)}, from {formatTime(session.startTime)} to {formatTime(session.endTime)}</Text>
               </Stack>)}
             </Stack>
           </Card.Section>

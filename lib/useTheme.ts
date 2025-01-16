@@ -17,7 +17,7 @@ import {
   Textarea,
   TextInput,
 } from '@mantine/core';
-import { DateTimePicker } from '@mantine/dates';
+import { DatePickerInput, DateTimePicker, TimeInput } from '@mantine/dates';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import useDyslexic from './useDyslexic';
@@ -110,6 +110,12 @@ export default function useTheme() {
           radius: 'md',
         },
       }),
+      DatePickerInput: DatePickerInput.extend({
+        defaultProps: {
+          size: 'md',
+          variant: 'filled',
+        },
+      }),
       DateTimePicker: DateTimePicker.extend({
         defaultProps: {
           size: 'md',
@@ -169,6 +175,12 @@ export default function useTheme() {
         },
       }),
       TextInput: TextInput.extend({
+        defaultProps: {
+          size: 'md',
+          variant: 'filled',
+        },
+      }),
+      TimeInput: TimeInput.extend({
         defaultProps: {
           size: 'md',
           variant: 'filled',

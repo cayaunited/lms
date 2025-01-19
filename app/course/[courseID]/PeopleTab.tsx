@@ -8,6 +8,7 @@ import {
   Checkbox,
   Container,
   Group,
+  Menu,
   rem,
   ScrollArea,
   Table,
@@ -16,7 +17,15 @@ import {
   Title,
 } from '@mantine/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faEye, faMinus, faRightLeft, faTrashCan, faUserPlus } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCheck,
+  faEllipsis,
+  faEye,
+  faMinus,
+  faRightLeft,
+  faTrashCan,
+  faUserPlus,
+} from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 
 export default function PeopleTab() {
@@ -92,27 +101,46 @@ export default function PeopleTab() {
                 />
               </Table.Th>
               <Table.Th style={{ width: rem(60) }}></Table.Th>
-              <Table.Th>name</Table.Th>
-              <Table.Th>email</Table.Th>
+              <Table.Th hiddenFrom="md">name and email</Table.Th>
+              <Table.Th visibleFrom="md">name</Table.Th>
+              <Table.Th visibleFrom="md">email</Table.Th>
               <Table.Th>sections</Table.Th>
               <Table.Th>
                 <Group justify="end">
-                  <ActionIcon
-                    color="red"
-                    variant="outline"
-                    size="lg"
-                    aria-label={`remove selected teacher from course`}
-                    title={`remove selected teacher from course`}
-                  >
-                    <FontAwesomeIcon icon={faTrashCan} />
-                  </ActionIcon>
+                  <Menu>
+                    <Menu.Target>
+                      <ActionIcon
+                        color="pink"
+                        size="lg"
+                        aria-label={`view actions`}
+                        title={`view actions`}
+                      >
+                        <FontAwesomeIcon icon={faEllipsis} />
+                      </ActionIcon>
+                    </Menu.Target>
+                    <Menu.Dropdown>
+                      <Menu.Label>actions</Menu.Label>
+                      <Menu.Item
+                        color="blue"
+                        leftSection={<FontAwesomeIcon icon={faRightLeft} />}
+                      >
+                        move to section
+                      </Menu.Item>
+                      <Menu.Item
+                        color="red"
+                        leftSection={<FontAwesomeIcon icon={faTrashCan} />}
+                      >
+                        remove selected
+                      </Menu.Item>
+                    </Menu.Dropdown>
+                  </Menu>
                 </Group>
               </Table.Th>
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>
             {teachers.map((teacher) => {
-              const selected = teacher.id === '1';
+              const selected = 0;
               
               return <Table.Tr
                 key={teacher.id}
@@ -126,48 +154,58 @@ export default function PeopleTab() {
                 <Table.Td>
                   <Avatar size={rem(40)} src={`/avatars/${teacher.avatar}.png`} radius={rem(40)} />
                 </Table.Td>
-                <Table.Td>{teacher.name}</Table.Td>
-                <Table.Td>{teacher.email}</Table.Td>
+                <Table.Td>
+                  <Text>{teacher.name}</Text>
+                  <Text hiddenFrom="md">{teacher.email}</Text>
+                </Table.Td>
+                <Table.Td visibleFrom="md">{teacher.email}</Table.Td>
                 <Table.Td>
                   <Group gap="sm">
                     {teacher.sections.map((section) => <Badge
                       key={section}
                       color="blue"
+                      px={rem(6)}
                     >{section}</Badge>)}
                   </Group>
                 </Table.Td>
                 <Table.Td>
                   <Group justify="end">
-                    <ActionIcon
-                      color="blue"
-                      size="lg"
-                      aria-label={`move teacher to section`}
-                      title={`move teacher to section`}
-                    >
-                      <FontAwesomeIcon icon={faRightLeft} />
-                    </ActionIcon>
-                    <ActionIcon
-                      component={Link}
-                      href={`/profile/${teacher.id}`}
-                      style={{ textDecoration: 'none', color: 'var(--mantine-color-green-text)', verticalAlign: 'middle' }}
-                      target="_blank"
-                      color="pink"
-                      c="black"
-                      size="lg"
-                      aria-label={`view teachers's profile`}
-                      title={`view teacher's profile`}
-                    >
-                      <FontAwesomeIcon icon={faEye} />
-                    </ActionIcon>
-                    <ActionIcon
-                      color="red"
-                      variant="outline"
-                      size="lg"
-                      aria-label={`remove teacher from course`}
-                      title={`remove teacher from course`}
-                    >
-                      <FontAwesomeIcon icon={faTrashCan} />
-                    </ActionIcon>
+                    <Menu>
+                      <Menu.Target>
+                        <ActionIcon
+                          color="pink"
+                          size="lg"
+                          aria-label={`view actions`}
+                          title={`view actions`}
+                        >
+                          <FontAwesomeIcon icon={faEllipsis} />
+                        </ActionIcon>
+                      </Menu.Target>
+                      <Menu.Dropdown>
+                        <Menu.Label>actions</Menu.Label>
+                        <Menu.Item
+                          color="blue"
+                          leftSection={<FontAwesomeIcon icon={faRightLeft} />}
+                        >
+                          move to section
+                        </Menu.Item>
+                        <Menu.Item
+                          component={Link}
+                          href={`/profile/${teacher.id}`}
+                          style={{ textDecoration: 'none', color: 'var(--mantine-color-pink-text)', verticalAlign: 'middle' }}
+                          target="_blank"
+                          leftSection={<FontAwesomeIcon icon={faEye} />}
+                        >
+                          view profile
+                        </Menu.Item>
+                        <Menu.Item
+                          color="red"
+                          leftSection={<FontAwesomeIcon icon={faTrashCan} />}
+                        >
+                          remove teacher
+                        </Menu.Item>
+                      </Menu.Dropdown>
+                    </Menu>
                   </Group>
                 </Table.Td>
               </Table.Tr>;
@@ -196,20 +234,39 @@ export default function PeopleTab() {
                 />
               </Table.Th>
               <Table.Th style={{ width: rem(60) }}></Table.Th>
-              <Table.Th>name</Table.Th>
-              <Table.Th>email</Table.Th>
+              <Table.Th hiddenFrom="md">name and email</Table.Th>
+              <Table.Th visibleFrom="md">name</Table.Th>
+              <Table.Th visibleFrom="md">email</Table.Th>
               <Table.Th>sections</Table.Th>
               <Table.Th>
                 <Group justify="end">
-                  <ActionIcon
-                    color="red"
-                    variant="outline"
-                    size="lg"
-                    aria-label={`remove selected assistant from course`}
-                    title={`remove selected assistant from course`}
-                  >
-                    <FontAwesomeIcon icon={faTrashCan} />
-                  </ActionIcon>
+                  <Menu>
+                    <Menu.Target>
+                      <ActionIcon
+                        color="pink"
+                        size="lg"
+                        aria-label={`view actions`}
+                        title={`view actions`}
+                      >
+                        <FontAwesomeIcon icon={faEllipsis} />
+                      </ActionIcon>
+                    </Menu.Target>
+                    <Menu.Dropdown>
+                      <Menu.Label>actions</Menu.Label>
+                      <Menu.Item
+                        color="blue"
+                        leftSection={<FontAwesomeIcon icon={faRightLeft} />}
+                      >
+                        move to section
+                      </Menu.Item>
+                      <Menu.Item
+                        color="red"
+                        leftSection={<FontAwesomeIcon icon={faTrashCan} />}
+                      >
+                        remove selected
+                      </Menu.Item>
+                    </Menu.Dropdown>
+                  </Menu>
                 </Group>
               </Table.Th>
             </Table.Tr>
@@ -237,41 +294,48 @@ export default function PeopleTab() {
                     {assistant.sections.map((section) => <Badge
                       key={section}
                       color="blue"
+                      px={rem(6)}
                     >{section}</Badge>)}
                   </Group>
                 </Table.Td>
                 <Table.Td>
                   <Group justify="end">
-                    <ActionIcon
-                      color="blue"
-                      size="lg"
-                      aria-label={`move teacher to section`}
-                      title={`move teacher to section`}
-                    >
-                      <FontAwesomeIcon icon={faRightLeft} />
-                    </ActionIcon>
-                    <ActionIcon
-                      component={Link}
-                      href={`/profile/${assistant.id}`}
-                      style={{ textDecoration: 'none', color: 'var(--mantine-color-green-text)', verticalAlign: 'middle' }}
-                      target="_blank"
-                      color="pink"
-                      c="black"
-                      size="lg"
-                      aria-label={`view assistant's profile`}
-                      title={`view assistant's profile`}
-                    >
-                      <FontAwesomeIcon icon={faEye} />
-                    </ActionIcon>
-                    <ActionIcon
-                      color="red"
-                      variant="outline"
-                      size="lg"
-                      aria-label={`remove assistant from course`}
-                      title={`remove assistant from course`}
-                    >
-                      <FontAwesomeIcon icon={faTrashCan} />
-                    </ActionIcon>
+                    <Menu>
+                      <Menu.Target>
+                        <ActionIcon
+                          color="pink"
+                          size="lg"
+                          aria-label={`view actions`}
+                          title={`view actions`}
+                        >
+                          <FontAwesomeIcon icon={faEllipsis} />
+                        </ActionIcon>
+                      </Menu.Target>
+                      <Menu.Dropdown>
+                        <Menu.Label>actions</Menu.Label>
+                        <Menu.Item
+                          color="blue"
+                          leftSection={<FontAwesomeIcon icon={faRightLeft} />}
+                        >
+                          move to section
+                        </Menu.Item>
+                        <Menu.Item
+                          component={Link}
+                          href={`/profile/${assistant.id}`}
+                          style={{ textDecoration: 'none', color: 'var(--mantine-color-pink-text)', verticalAlign: 'middle' }}
+                          target="_blank"
+                          leftSection={<FontAwesomeIcon icon={faEye} />}
+                        >
+                          view profile
+                        </Menu.Item>
+                        <Menu.Item
+                          color="red"
+                          leftSection={<FontAwesomeIcon icon={faTrashCan} />}
+                        >
+                          remove assistant
+                        </Menu.Item>
+                      </Menu.Dropdown>
+                    </Menu>
                   </Group>
                 </Table.Td>
               </Table.Tr>;
@@ -300,20 +364,39 @@ export default function PeopleTab() {
                 />
               </Table.Th>
               <Table.Th style={{ width: rem(60) }}></Table.Th>
-              <Table.Th>name</Table.Th>
-              <Table.Th>email</Table.Th>
+              <Table.Th hiddenFrom="md">name and email</Table.Th>
+              <Table.Th visibleFrom="md">name</Table.Th>
+              <Table.Th visibleFrom="md">email</Table.Th>
               <Table.Th>sections</Table.Th>
               <Table.Th>
                 <Group justify="end">
-                  <ActionIcon
-                    color="red"
-                    variant="outline"
-                    size="lg"
-                    aria-label={`remove selected student from course`}
-                    title={`remove selected student from course`}
-                  >
-                    <FontAwesomeIcon icon={faTrashCan} />
-                  </ActionIcon>
+                  <Menu>
+                    <Menu.Target>
+                      <ActionIcon
+                        color="pink"
+                        size="lg"
+                        aria-label={`view actions`}
+                        title={`view actions`}
+                      >
+                        <FontAwesomeIcon icon={faEllipsis} />
+                      </ActionIcon>
+                    </Menu.Target>
+                    <Menu.Dropdown>
+                      <Menu.Label>actions</Menu.Label>
+                      <Menu.Item
+                        color="blue"
+                        leftSection={<FontAwesomeIcon icon={faRightLeft} />}
+                      >
+                        move to section
+                      </Menu.Item>
+                      <Menu.Item
+                        color="red"
+                        leftSection={<FontAwesomeIcon icon={faTrashCan} />}
+                      >
+                        remove selected
+                      </Menu.Item>
+                    </Menu.Dropdown>
+                  </Menu>
                 </Group>
               </Table.Th>
             </Table.Tr>
@@ -341,41 +424,48 @@ export default function PeopleTab() {
                     {student.sections.map((section) => <Badge
                       key={section}
                       color="blue"
+                      px={rem(6)}
                     >{section}</Badge>)}
                   </Group>
                 </Table.Td>
                 <Table.Td>
                   <Group justify="end">
-                    <ActionIcon
-                      color="blue"
-                      size="lg"
-                      aria-label={`move teacher to section`}
-                      title={`move teacher to section`}
-                    >
-                      <FontAwesomeIcon icon={faRightLeft} />
-                    </ActionIcon>
-                    <ActionIcon
-                      component={Link}
-                      href={`/profile/${student.id}`}
-                      style={{ textDecoration: 'none', color: 'var(--mantine-color-green-text)', verticalAlign: 'middle' }}
-                      target="_blank"
-                      color="pink"
-                      c="black"
-                      size="lg"
-                      aria-label={`view student's profile`}
-                      title={`view student's profile`}
-                    >
-                      <FontAwesomeIcon icon={faEye} />
-                    </ActionIcon>
-                    <ActionIcon
-                      color="red"
-                      variant="outline"
-                      size="lg"
-                      aria-label={`remove student from course`}
-                      title={`remove student from course`}
-                    >
-                      <FontAwesomeIcon icon={faTrashCan} />
-                    </ActionIcon>
+                    <Menu>
+                      <Menu.Target>
+                        <ActionIcon
+                          color="pink"
+                          size="lg"
+                          aria-label={`view actions`}
+                          title={`view actions`}
+                        >
+                          <FontAwesomeIcon icon={faEllipsis} />
+                        </ActionIcon>
+                      </Menu.Target>
+                      <Menu.Dropdown>
+                        <Menu.Label>actions</Menu.Label>
+                        <Menu.Item
+                          color="blue"
+                          leftSection={<FontAwesomeIcon icon={faRightLeft} />}
+                        >
+                          move to section
+                        </Menu.Item>
+                        <Menu.Item
+                          component={Link}
+                          href={`/profile/${student.id}`}
+                          style={{ textDecoration: 'none', color: 'var(--mantine-color-pink-text)', verticalAlign: 'middle' }}
+                          target="_blank"
+                          leftSection={<FontAwesomeIcon icon={faEye} />}
+                        >
+                          view profile
+                        </Menu.Item>
+                        <Menu.Item
+                          color="red"
+                          leftSection={<FontAwesomeIcon icon={faTrashCan} />}
+                        >
+                          remove student
+                        </Menu.Item>
+                      </Menu.Dropdown>
+                    </Menu>
                   </Group>
                 </Table.Td>
               </Table.Tr>;

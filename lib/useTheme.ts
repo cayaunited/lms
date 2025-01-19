@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  Badge,
   Card,
   Checkbox,
   createTheme,
@@ -99,6 +100,11 @@ export default function useTheme() {
     },
     
     components: {
+      Badge: Badge.extend({
+        defaultProps: {
+          size: 'lg',
+        },
+      }),
       Card: Card.extend({
         defaultProps: {
           shadow: 'sm',

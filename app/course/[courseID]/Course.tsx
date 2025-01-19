@@ -15,6 +15,8 @@ export default function Course({ courseID }: { courseID: string }) {
   
   return <>
     <Tabs value={tab}>
+      <AssignmentsTab />
+      
       <Tabs.Panel value="materials">
         materials
       </Tabs.Panel>
@@ -24,8 +26,6 @@ export default function Course({ courseID }: { courseID: string }) {
       <Tabs.Panel value="discussions">
         discussions
       </Tabs.Panel>
-      
-      <AssignmentsTab />
       
       <SessionsTab />
       

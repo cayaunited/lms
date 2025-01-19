@@ -52,6 +52,7 @@ export default function SessionsTab() {
             key={session.id}
             withBorder
             p="md"
+            className="hover-card"
             style={{ borderColor: session.official ? 'var(--mantine-color-pink-outline)' : undefined }}
           >
             <Text fw={700}>{formatDate(session.startTime)}, from {formatTime(session.startTime)} to {formatTime(session.endTime)}</Text>

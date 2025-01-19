@@ -53,8 +53,8 @@ export default function MainLayout({ children }: { children: any }) {
   
   const [tab, dispatchTab] = useReducer((tab: number, action: any) => {
     if (action.type === 'changed') return action.tab;
-    return 'materials';
-  }, 'materials');
+    return 'assignments';
+  }, 'assignments');
   
   useEffect(() => {
     (async () => {
@@ -183,6 +183,11 @@ export default function MainLayout({ children }: { children: any }) {
                 >
                   <Tabs.List>
                     <Tabs.Tab
+                      value="assignments"
+                      fz="md"
+                      leftSection={<FontAwesomeIcon icon={faListCheck} size="lg" />}
+                    >assignments</Tabs.Tab>
+                    <Tabs.Tab
                       value="materials"
                       fz="md"
                       leftSection={<FontAwesomeIcon icon={faFolder} size="lg" />}
@@ -197,11 +202,6 @@ export default function MainLayout({ children }: { children: any }) {
                       fz="md"
                       leftSection={<FontAwesomeIcon icon={faComments} size="lg" />}
                     >discussions</Tabs.Tab>
-                    <Tabs.Tab
-                      value="assignments"
-                      fz="md"
-                      leftSection={<FontAwesomeIcon icon={faListCheck} size="lg" />}
-                    >assignments</Tabs.Tab>
                     <Tabs.Tab
                       value="sessions"
                       fz="md"

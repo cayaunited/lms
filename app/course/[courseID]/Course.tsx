@@ -10,6 +10,7 @@ import ArticlesTab from './ArticlesTab';
 import AssignmentsTab from './AssignmentsTab';
 import SessionsTab from './SessionsTab';
 import PeopleTab from './PeopleTab';
+import GradesTab from './GradesTab';
 
 export default function Course({ courseID }: { courseID: string }) {
   const tab = useContext(TabContext);
@@ -30,9 +31,7 @@ export default function Course({ courseID }: { courseID: string }) {
       
       <SessionsTab />
       
-      <Tabs.Panel value="grades">
-        grades
-      </Tabs.Panel>
+      <GradesTab />
       
       <PeopleTab />
       

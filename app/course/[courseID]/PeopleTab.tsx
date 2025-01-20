@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import {
   ActionIcon,
   Avatar,
@@ -20,13 +21,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCheck,
   faEllipsis,
+  faEnvelope,
   faEye,
   faMinus,
   faRightLeft,
   faTrashCan,
   faUserPlus,
 } from '@fortawesome/free-solid-svg-icons';
-import Link from 'next/link';
 
 export default function PeopleTab() {
   const teachers = [
@@ -127,6 +128,11 @@ export default function PeopleTab() {
                         move to section
                       </Menu.Item>
                       <Menu.Item
+                        leftSection={<FontAwesomeIcon icon={faEnvelope} />}
+                      >
+                        email selected
+                      </Menu.Item>
+                      <Menu.Item
                         color="red"
                         leftSection={<FontAwesomeIcon icon={faTrashCan} />}
                       >
@@ -155,7 +161,7 @@ export default function PeopleTab() {
                   <Avatar size={rem(40)} src={`/avatars/${teacher.avatar}.png`} radius={rem(40)} />
                 </Table.Td>
                 <Table.Td>
-                  <Text>{teacher.name}</Text>
+                  <Text fw={700}>{teacher.name}</Text>
                   <Text hiddenFrom="md">{teacher.email}</Text>
                 </Table.Td>
                 <Table.Td visibleFrom="md">{teacher.email}</Table.Td>
@@ -197,6 +203,11 @@ export default function PeopleTab() {
                           leftSection={<FontAwesomeIcon icon={faEye} />}
                         >
                           view profile
+                        </Menu.Item>
+                        <Menu.Item
+                          leftSection={<FontAwesomeIcon icon={faEnvelope} />}
+                        >
+                          email teacher
                         </Menu.Item>
                         <Menu.Item
                           color="red"
@@ -260,6 +271,11 @@ export default function PeopleTab() {
                         move to section
                       </Menu.Item>
                       <Menu.Item
+                        leftSection={<FontAwesomeIcon icon={faEnvelope} />}
+                      >
+                        email selected
+                      </Menu.Item>
+                      <Menu.Item
                         color="red"
                         leftSection={<FontAwesomeIcon icon={faTrashCan} />}
                       >
@@ -287,8 +303,11 @@ export default function PeopleTab() {
                 <Table.Td>
                   <Avatar size={rem(40)} src={`/avatars/${assistant.avatar}.png`} radius={rem(40)} />
                 </Table.Td>
-                <Table.Td>{assistant.name}</Table.Td>
-                <Table.Td>{assistant.email}</Table.Td>
+                <Table.Td>
+                  <Text fw={700}>{assistant.name}</Text>
+                  <Text hiddenFrom="md">{assistant.email}</Text>
+                </Table.Td>
+                <Table.Td visibleFrom="md">{assistant.email}</Table.Td>
                 <Table.Td>
                   <Group gap="sm">
                     {assistant.sections.map((section) => <Badge
@@ -327,6 +346,11 @@ export default function PeopleTab() {
                           leftSection={<FontAwesomeIcon icon={faEye} />}
                         >
                           view profile
+                        </Menu.Item>
+                        <Menu.Item
+                          leftSection={<FontAwesomeIcon icon={faEnvelope} />}
+                        >
+                          email assistant
                         </Menu.Item>
                         <Menu.Item
                           color="red"
@@ -390,6 +414,11 @@ export default function PeopleTab() {
                         move to section
                       </Menu.Item>
                       <Menu.Item
+                        leftSection={<FontAwesomeIcon icon={faEnvelope} />}
+                      >
+                        email selected
+                      </Menu.Item>
+                      <Menu.Item
                         color="red"
                         leftSection={<FontAwesomeIcon icon={faTrashCan} />}
                       >
@@ -417,8 +446,11 @@ export default function PeopleTab() {
                 <Table.Td>
                   <Avatar size={rem(40)} src={`/avatars/${student.avatar}.png`} radius={rem(40)} />
                 </Table.Td>
-                <Table.Td>{student.name}</Table.Td>
-                <Table.Td>{student.email}</Table.Td>
+                <Table.Td>
+                  <Text fw={700}>{student.name}</Text>
+                  <Text hiddenFrom="md">{student.email}</Text>
+                </Table.Td>
+                <Table.Td visibleFrom="md">{student.email}</Table.Td>
                 <Table.Td>
                   <Group gap="sm">
                     {student.sections.map((section) => <Badge
@@ -457,6 +489,11 @@ export default function PeopleTab() {
                           leftSection={<FontAwesomeIcon icon={faEye} />}
                         >
                           view profile
+                        </Menu.Item>
+                        <Menu.Item
+                          leftSection={<FontAwesomeIcon icon={faEnvelope} />}
+                        >
+                          email student
                         </Menu.Item>
                         <Menu.Item
                           color="red"

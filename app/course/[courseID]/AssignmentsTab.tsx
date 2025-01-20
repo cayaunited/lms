@@ -65,10 +65,12 @@ export default function ArticlesTab() {
       mb="xs"
     >
       <Grid.Col span={{ base: 12, md: 4 }}>
-        <Select
-          label="section"
-          data={['all', '1']}
-        />
+        <Group justify="center">
+          <Select
+            label="section"
+            data={['all', '1']}
+          />
+        </Group>
       </Grid.Col>
       <Grid.Col span={{ base: 12, md: 4 }}>
         <Progress
@@ -123,9 +125,7 @@ export default function ArticlesTab() {
                 />
               </Center>}
             />
-            <Text
-              size="xl"
-            >1 out of 4 graded</Text>
+            <Text size="xl">1 out of 4 graded</Text>
           </Group>
         </Card>
       </Grid.Col>)}
@@ -143,6 +143,7 @@ export default function ArticlesTab() {
             p="md"
             h="100%"
             className="hover-card"
+            shadow="sm"
           >
             <Group mb="md">
               <Box

@@ -82,6 +82,7 @@ export default function ArticlesTab() {
           p="md"
           h="100%"
           className="hover-card"
+          shadow="sm"
         >
           <Text
             size="xl"

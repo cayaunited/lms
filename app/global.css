@@ -11,7 +11,9 @@
 .mantine-Checkbox-input,
 .mantine-Menu-dropdown,
 .mantine-ActionIcon-root,
-.mantine-Table-tr {
+.mantine-Table-tr,
+.mantine-ChartTooltip-tooltip,
+.mantine-Table-table {
   border-width: 0.25rem;
 }
 

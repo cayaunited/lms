@@ -1,16 +1,14 @@
 'use client';
 
 import { useContext } from 'react';
-import {
-  Tabs,
-  Text,
-} from '@mantine/core';
+import { Tabs } from '@mantine/core';
 import { TabContext } from '@/lib/tabContext';
 import ArticlesTab from './ArticlesTab';
 import AssignmentsTab from './AssignmentsTab';
 import SessionsTab from './SessionsTab';
 import PeopleTab from './PeopleTab';
 import GradesTab from './GradesTab';
+import DiscussionsTab from './DiscussionsTab';
 
 export default function Course({ courseID }: { courseID: string }) {
   const tab = useContext(TabContext);
@@ -25,9 +23,7 @@ export default function Course({ courseID }: { courseID: string }) {
       
       <ArticlesTab />
       
-      <Tabs.Panel value="discussions">
-        discussions
-      </Tabs.Panel>
+      <DiscussionsTab />
       
       <SessionsTab />
       

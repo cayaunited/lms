@@ -10,8 +10,10 @@ import {
   Divider,
   mergeMantineTheme,
   Modal,
+  MultiSelect,
   NumberInput,
   PasswordInput,
+  Pill,
   rem,
   SegmentedControl,
   Select,
@@ -141,6 +143,14 @@ export default function useTheme() {
         defaultProps: {
           centered: true,
           closeButtonProps: { icon: (FontAwesomeIcon as any).render({ icon: faXmark }) }
+        },
+      }),
+      MultiSelect: MultiSelect.extend({
+        defaultProps: {
+          size: 'md',
+          variant: 'filled',
+          clearable: true,
+          clearButtonProps: { icon: (FontAwesomeIcon as any).render({ icon: faXmark }) }
         },
       }),
       NumberInput: NumberInput.extend({

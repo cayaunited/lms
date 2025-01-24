@@ -55,7 +55,6 @@ export default function ArticlesTab() {
       >
         <TextInput
           radius="xl"
-          size="md"
           placeholder="the basics of..."
           rightSectionWidth={rem(42)}
           rightSection={

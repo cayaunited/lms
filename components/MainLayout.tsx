@@ -13,6 +13,7 @@ import {
   Group,
   MantineProvider,
   Tabs,
+  Text,
 } from '@mantine/core';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import { Notifications } from '@mantine/notifications';
@@ -40,6 +41,7 @@ import Footer from './Footer';
 import { AvatarContext, AvatarDispatchContext } from '@/lib/avatarContext';
 import { createClient } from '@/lib/supabase/client';
 import { TabContext, TabDispatchContext } from '@/lib/tabContext';
+import { CourseContext, CourseDispatchContext } from '@/lib/courseContext';
 
 export default function MainLayout({ children }: { children: any }) {
   const supabase = createClient();
@@ -55,6 +57,11 @@ export default function MainLayout({ children }: { children: any }) {
     if (action.type === 'changed') return action.tab;
     return 'assignments';
   }, 'assignments');
+  
+  const [course, dispatchCourse] = useReducer((course: number, action: any) => {
+    if (action.type === 'changed') return action.course;
+    return { number: '', name: '' };
+  }, { number: '', name: '' });
   
   useEffect(() => {
     (async () => {
@@ -86,159 +93,178 @@ export default function MainLayout({ children }: { children: any }) {
     theme={theme}
   >
     <AvatarContext.Provider value={avatar}>
-      <AvatarDispatchContext.Provider value={dispatchAvatar}>
-        <TabContext.Provider value={tab}>
-          <TabDispatchContext.Provider value={dispatchTab}>
-            <Notifications />
+    <AvatarDispatchContext.Provider value={dispatchAvatar}>
+    <TabContext.Provider value={tab}>
+    <TabDispatchContext.Provider value={dispatchTab}>
+    <CourseContext.Provider value={course}>
+    <CourseDispatchContext.Provider value={dispatchCourse}>
+      <Notifications />
+      
+      <AppShell
+        header={{ height: 60 + (shouldShowTabs ? 44 : 0) }}
+        footer={{ height: 60 }}
+        navbar={{ width: 300, breakpoint: 'sm', collapsed: { mobile: !navigationOpened, desktop: !navigationOpened } }}
+        padding="md"
+        layout={isMobile ? 'default' : 'alt'}
+      >
+        <AppShell.Header>
+          <Group
+            h={60}
+            px="md"
+            justify="space-between"
+          >
+            <Group>
+              <Button
+                onClick={toggleNavigation}
+                variant="transparent"
+                p={0}
+                radius={0}
+                w={36}
+                c="green"
+              >
+                <FontAwesomeIcon
+                  icon={navigationOpened ? faXmark : faBars }
+                  size="2x"
+                />
+              </Button>
+              <Anchor
+                component={Link}
+                href="/"
+                variant="gradient"
+                gradient={{ from: 'green', to: 'blue' }}
+                fw={700}
+                ff={headerFont}
+                size="lg"
+              >Caya</Anchor>
+            </Group>
             
-            <AppShell
-              header={{ height: 60 + (shouldShowTabs ? 44 : 0) }}
-              footer={{ height: 60 }}
-              navbar={{ width: 300, breakpoint: 'sm', collapsed: { mobile: !navigationOpened, desktop: !navigationOpened } }}
-              padding="md"
-              layout={isMobile ? 'default' : 'alt'}
+            <Group
+              display={pathname.startsWith('/course') ? 'flex' : 'none'}
+              gap={0}
             >
-              <AppShell.Header>
-                <Group
-                  h={60}
-                  px="md"
-                  justify="space-between"
-                >
-                  <Group>
-                    <Button
-                      onClick={toggleNavigation}
-                      variant="transparent"
-                      p={0}
-                      radius={0}
-                      w={36}
-                      c="green"
-                    >
-                      <FontAwesomeIcon
-                        icon={navigationOpened ? faXmark : faBars }
-                        size="2x"
-                      />
-                    </Button>
-                    <Anchor
-                      component={Link}
-                      href="/"
-                      variant="gradient"
-                      gradient={{ from: 'green', to: 'blue' }}
-                      fw={700}
-                      ff={headerFont}
-                      size="lg"
-                    >Caya</Anchor>
-                  </Group>
-                  
-                  <Group>
-                    <Button
-                      visibleFrom="md"
-                      display={user ? 'none' : 'block'}
-                      component={Link}
-                      href="/signin"
-                      color="pink"
-                      leftSection={<FontAwesomeIcon icon={faRightToBracket} />}
-                    >
-                      sign in
-                    </Button>
-                    <Button
-                      visibleFrom="md"
-                      display={user ? 'none' : 'block'}
-                      component={Link}
-                      href="/signup"
-                      color="pink"
-                      variant="outline"
-                      leftSection={<FontAwesomeIcon icon={faUserPlus} />}
-                    >
-                      sign up
-                    </Button>
-                    <Button
-                      visibleFrom="md"
-                      display={user ? 'block' : 'none'}
-                      component={Link}
-                      href="/signout"
-                      color="pink"
-                      variant="outline"
-                      leftSection={<FontAwesomeIcon icon={faRightFromBracket} />}
-                    >
-                      sign out
-                    </Button>
-                    <ActionIcon
-                      display={user ? 'block' : 'none'}
-                      component={Link}
-                      href="/profile"
-                      size="lg"
-                      variant="transparent"
-                    >
-                      <Avatar
-                        src={`/avatars/${avatar >= 0 ? avatar : 0}.png`}
-                        alt=""
-                      />
-                    </ActionIcon>
-                  </Group>
-                </Group>
-                <Tabs
-                  display={shouldShowTabs ? 'block' : 'none'}
-                  value={tab}
-                  onChange={(value) => dispatchTab({ type: 'changed', tab: value })}
-                >
-                  <Tabs.List>
-                    <Tabs.Tab
-                      value="assignments"
-                      fz="md"
-                      leftSection={<FontAwesomeIcon icon={faListCheck} size="lg" />}
-                    >assignments</Tabs.Tab>
-                    <Tabs.Tab
-                      value="materials"
-                      fz="md"
-                      leftSection={<FontAwesomeIcon icon={faFolder} size="lg" />}
-                    >materials</Tabs.Tab>
-                    <Tabs.Tab
-                      value="articles"
-                      fz="md"
-                      leftSection={<FontAwesomeIcon icon={faFileLines} size="lg" />}
-                    >articles</Tabs.Tab>
-                    <Tabs.Tab
-                      value="discussions"
-                      fz="md"
-                      leftSection={<FontAwesomeIcon icon={faComments} size="lg" />}
-                    >discussions</Tabs.Tab>
-                    <Tabs.Tab
-                      value="sessions"
-                      fz="md"
-                      leftSection={<FontAwesomeIcon icon={faPersonChalkboard} size="lg" />}
-                    >study sessions</Tabs.Tab>
-                    <Tabs.Tab
-                      value="grades"
-                      fz="md"
-                      leftSection={<FontAwesomeIcon icon={faChartSimple} size="lg" />}
-                    >grades</Tabs.Tab>
-                    <Tabs.Tab
-                      value="people"
-                      fz="md"
-                      leftSection={<FontAwesomeIcon icon={faUsers} size="lg" />}
-                    >people</Tabs.Tab>
-                    <Tabs.Tab
-                      value="reports"
-                      fz="md"
-                      leftSection={<FontAwesomeIcon icon={faExclamationCircle} size="lg" />}
-                    >reports</Tabs.Tab>
-                  </Tabs.List>
-                </Tabs>
-              </AppShell.Header>
-              
-              <Navbar
-                user={user}
-                navigationOpened={navigationOpened}
-                toggleNavigation={toggleNavigation}
-              />
-              
-              <AppShell.Main>{children}</AppShell.Main>
-              
-              <Footer />
-            </AppShell>
-          </TabDispatchContext.Provider>
-        </TabContext.Provider>
-      </AvatarDispatchContext.Provider>
+              <Text
+                fw={700}
+                ff={headerFont}
+              >{course?.number}</Text>
+              <Text
+                visibleFrom="md"
+                fw={700}
+                ff={headerFont}
+              >&nbsp;- {course?.name}</Text>
+            </Group>
+            
+            <Group>
+              <Button
+                visibleFrom="md"
+                display={user ? 'none' : 'block'}
+                component={Link}
+                href="/signin"
+                color="pink"
+                leftSection={<FontAwesomeIcon icon={faRightToBracket} />}
+              >
+                sign in
+              </Button>
+              <Button
+                visibleFrom="md"
+                display={user ? 'none' : 'block'}
+                component={Link}
+                href="/signup"
+                color="pink"
+                variant="outline"
+                leftSection={<FontAwesomeIcon icon={faUserPlus} />}
+              >
+                sign up
+              </Button>
+              <Button
+                visibleFrom="md"
+                display={user ? 'block' : 'none'}
+                component={Link}
+                href="/signout"
+                color="pink"
+                variant="outline"
+                leftSection={<FontAwesomeIcon icon={faRightFromBracket} />}
+              >
+                sign out
+              </Button>
+              <ActionIcon
+                display={user ? 'block' : 'none'}
+                component={Link}
+                href="/profile"
+                size="lg"
+                variant="transparent"
+              >
+                <Avatar
+                  src={`/avatars/${avatar >= 0 ? avatar : 0}.png`}
+                  alt=""
+                />
+              </ActionIcon>
+            </Group>
+          </Group>
+          <Tabs
+            display={shouldShowTabs ? 'block' : 'none'}
+            value={tab}
+            onChange={(value) => dispatchTab({ type: 'changed', tab: value })}
+          >
+            <Tabs.List>
+              <Tabs.Tab
+                value="assignments"
+                fz="md"
+                leftSection={<FontAwesomeIcon icon={faListCheck} size="lg" />}
+              >assignments</Tabs.Tab>
+              <Tabs.Tab
+                value="materials"
+                fz="md"
+                leftSection={<FontAwesomeIcon icon={faFolder} size="lg" />}
+              >materials</Tabs.Tab>
+              <Tabs.Tab
+                value="articles"
+                fz="md"
+                leftSection={<FontAwesomeIcon icon={faFileLines} size="lg" />}
+              >articles</Tabs.Tab>
+              <Tabs.Tab
+                value="discussions"
+                fz="md"
+                leftSection={<FontAwesomeIcon icon={faComments} size="lg" />}
+              >discussions</Tabs.Tab>
+              <Tabs.Tab
+                value="sessions"
+                fz="md"
+                leftSection={<FontAwesomeIcon icon={faPersonChalkboard} size="lg" />}
+              >study sessions</Tabs.Tab>
+              <Tabs.Tab
+                value="grades"
+                fz="md"
+                leftSection={<FontAwesomeIcon icon={faChartSimple} size="lg" />}
+              >grades</Tabs.Tab>
+              <Tabs.Tab
+                value="people"
+                fz="md"
+                leftSection={<FontAwesomeIcon icon={faUsers} size="lg" />}
+              >people</Tabs.Tab>
+              <Tabs.Tab
+                value="reports"
+                fz="md"
+                leftSection={<FontAwesomeIcon icon={faExclamationCircle} size="lg" />}
+              >reports</Tabs.Tab>
+            </Tabs.List>
+          </Tabs>
+        </AppShell.Header>
+        
+        <Navbar
+          user={user}
+          navigationOpened={navigationOpened}
+          toggleNavigation={toggleNavigation}
+        />
+        
+        <AppShell.Main>{children}</AppShell.Main>
+        
+        <Footer />
+      </AppShell>
+    </CourseDispatchContext.Provider>
+    </CourseContext.Provider>
+    </TabDispatchContext.Provider>
+    </TabContext.Provider>
+    </AvatarDispatchContext.Provider>
     </AvatarContext.Provider>
   </MantineProvider>;
 }

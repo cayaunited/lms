@@ -89,7 +89,7 @@ export default function Assignment({ courseID, assignmentID }: { courseID: strin
           .select('role').eq('person_id', uid).eq('course_id', courseID);
         
         if (connectionError) {
-          showNotification(false, 'Failed to load assignment', 'Sorry, we couldn\'t load your assignment');
+          showNotification(false, 'Failed to load assignment', 'Sorry, we couldn\'t load the assignment');
           console.log(connectionError);
           return;
         }
@@ -99,7 +99,7 @@ export default function Assignment({ courseID, assignmentID }: { courseID: strin
           .select('assignment_types').eq('id', courseID);
         
         if (courseError) {
-          showNotification(false, 'Failed to load assignment', 'Sorry, we couldn\'t load your assignment');
+          showNotification(false, 'Failed to load assignment', 'Sorry, we couldn\'t load the assignment');
           console.log(courseError);
           return;
         }
@@ -108,7 +108,7 @@ export default function Assignment({ courseID, assignmentID }: { courseID: strin
           .select('sections').eq('course_id', courseID);
         
         if (sectionsError) {
-          showNotification(false, 'Failed to load assignment', 'Sorry, we couldn\'t load your assignment');
+          showNotification(false, 'Failed to load assignment', 'Sorry, we couldn\'t load the assignment');
           console.log(sectionsError);
           return;
         }
@@ -141,7 +141,7 @@ export default function Assignment({ courseID, assignmentID }: { courseID: strin
             .select().eq('id', assignmentID);
           
           if (assignmentError) {
-            showNotification(false, 'Failed to load assignment', 'Sorry, we couldn\'t load your assignment');
+            showNotification(false, 'Failed to load assignment', 'Sorry, we couldn\'t load the assignment');
             console.log(assignmentError);
             return;
           }
@@ -163,7 +163,7 @@ export default function Assignment({ courseID, assignmentID }: { courseID: strin
           editor.commands.setContent(content);
         }
       } catch (error) {
-        showNotification(false, 'Failed to load assignment', 'Sorry, we couldn\'t load your assignment');
+        showNotification(false, 'Failed to load assignment', 'Sorry, we couldn\'t load the assignment');
         console.log(error);
       }
     })();

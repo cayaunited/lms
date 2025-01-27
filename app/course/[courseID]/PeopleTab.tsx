@@ -29,57 +29,11 @@ import {
   faUserPlus,
 } from '@fortawesome/free-solid-svg-icons';
 
-export default function PeopleTab() {
-  const teachers = [
-    {
-      id: '1',
-      name: 'Example Teacher 1',
-      email: 'teacher1@cayaunited.app',
-      avatar: 0,
-      sections: ['1', '2'],
-    },
-    {
-      id: '2',
-      name: 'Example Teacher 2',
-      email: 'teacher2@cayaunited.app',
-      avatar: 1,
-      sections: ['1'],
-    },
-  ];
-  
-  const assistants = [
-    {
-      id: '1',
-      name: 'Example Assistant 1',
-      email: 'assistant1@cayaunited.app',
-      avatar: 0,
-      sections: ['1', '2'],
-    },
-    {
-      id: '2',
-      name: 'Example Assistant 2',
-      email: 'assistant2@cayaunited.app',
-      avatar: 1,
-      sections: ['1'],
-    },
-  ];
-  
-  const students = [
-    {
-      id: '1',
-      name: 'Example Student 1',
-      email: 'student1@cayaunited.app',
-      avatar: 0,
-      sections: ['1', '2'],
-    },
-    {
-      id: '2',
-      name: 'Example Student 2',
-      email: 'student2@cayaunited.app',
-      avatar: 1,
-      sections: ['1'],
-    },
-  ];
+export default function PeopleTab({ user, course, teacherIDs, assistantIDs, studentIDs, peopleByID, setPeopleByID }:
+  { user: any, course: any, teacherIDs: string[], assistantIDs: string[], studentIDs: string[], peopleByID: any, setPeopleByID: any }) {
+  const teachers = teacherIDs.map((teacherID) => ({ id: teacherID, ...peopleByID[teacherID] }));
+  const assistants = assistantIDs.map((assistantID) => ({ id: assistantID, ...peopleByID[assistantID] }));
+  const students = studentIDs.map((studentID) => ({ id: studentID, ...peopleByID[studentID] }));
   
   return <Tabs.Panel value="people">
     <Container>
@@ -167,7 +121,7 @@ export default function PeopleTab() {
                 <Table.Td visibleFrom="md">{teacher.email}</Table.Td>
                 <Table.Td>
                   <Group gap="sm">
-                    {teacher.sections.map((section) => <Badge
+                    {teacher.sections.map((section: string) => <Badge
                       key={section}
                       color="blue"
                       px={rem(6)}
@@ -310,7 +264,7 @@ export default function PeopleTab() {
                 <Table.Td visibleFrom="md">{assistant.email}</Table.Td>
                 <Table.Td>
                   <Group gap="sm">
-                    {assistant.sections.map((section) => <Badge
+                    {assistant.sections.map((section: string) => <Badge
                       key={section}
                       color="blue"
                       px={rem(6)}
@@ -453,7 +407,7 @@ export default function PeopleTab() {
                 <Table.Td visibleFrom="md">{student.email}</Table.Td>
                 <Table.Td>
                   <Group gap="sm">
-                    {student.sections.map((section) => <Badge
+                    {student.sections.map((section: string) => <Badge
                       key={section}
                       color="blue"
                       px={rem(6)}

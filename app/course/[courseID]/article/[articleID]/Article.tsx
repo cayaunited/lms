@@ -91,7 +91,7 @@ export default function Article({ courseID, articleID }: { courseID: string, art
           .select('role').eq('person_id', uid).eq('course_id', courseID);
         
         if (connectionError) {
-          showNotification(false, 'Failed to load article', 'Sorry, we couldn\'t load your article');
+          showNotification(false, 'Failed to load article', 'Sorry, we couldn\'t load the article');
           console.log(connectionError);
           return;
         }
@@ -114,7 +114,7 @@ export default function Article({ courseID, articleID }: { courseID: string, art
             .select().eq('id', articleID);
           
           if (articleError) {
-            showNotification(false, 'Failed to load article', 'Sorry, we couldn\'t load your article');
+            showNotification(false, 'Failed to load article', 'Sorry, we couldn\'t load the article');
             console.log(articleError);
             return;
           }
@@ -135,7 +135,7 @@ export default function Article({ courseID, articleID }: { courseID: string, art
           articleEditor.commands.setContent(content);
         }
       } catch (error) {
-        showNotification(false, 'Failed to load article', 'Sorry, we couldn\'t load your article');
+        showNotification(false, 'Failed to load article', 'Sorry, we couldn\'t load the article');
         console.log(error);
       }
     })();

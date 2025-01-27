@@ -66,25 +66,25 @@ export default function Dashboard() {
         const today = new Date();
         const assignments: any[] = [];
         
-        for (const course of coursesData) {
-          const { data: assignmentsData, error: assignmentsError } = await supabase.from('assignments').select()
-            .eq('course_id', course.id)
-            .in('section', ['all', ...connectionData.find((connection) => connection.course_id === course.id).sections])
-            .gte('date_due', `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`);
+        // for (const course of coursesData) {
+        //   const { data: assignmentsData, error: assignmentsError } = await supabase.from('assignments').select()
+        //     .eq('course_id', course.id)
+        //     .in('section', ['all', ...connectionData.find((connection) => connection.course_id === course.id).sections])
+        //     .gte('date_due', `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`);
           
-          if (assignmentsError) {
-            showNotification(false, 'Failed to load dashboard', 'Sorry, we couldn\'t load your dashboard');
-            console.log(assignmentsError);
-            return;
-          }
+        //   if (assignmentsError) {
+        //     showNotification(false, 'Failed to load dashboard', 'Sorry, we couldn\'t load your dashboard');
+        //     console.log(assignmentsError);
+        //     return;
+        //   }
           
-          assignmentsData.forEach((assignment) => assignments.push({
-            id: assignment.id,
-            number: course.number,
-            name: assignment.name,
-            date: new Date(assignment.date_due),
-          }));
-        }
+        //   assignmentsData.forEach((assignment) => assignments.push({
+        //     id: assignment.id,
+        //     number: course.number,
+        //     name: assignment.name,
+        //     date: new Date(assignment.date_due),
+        //   }));
+        // }
         
         setAssignments(assignments);
       } catch (error) {
@@ -241,8 +241,7 @@ export default function Dashboard() {
         color: Number(color),
       };
       
-      const { error: courseError } = await supabase.from('courses')
-        .insert({ ...course, assignment_types: [] });
+      const { error: courseError } = await supabase.from('courses').insert(course);
       
       if (courseError) {
         showNotification(false, 'Failed to create course', 'Sorry, we couldn\'t create the course');

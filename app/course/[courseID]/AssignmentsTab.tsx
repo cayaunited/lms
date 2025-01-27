@@ -27,8 +27,8 @@ import assignmentIcons from '@/lib/assignmentIcons';
 export default function ArticlesTab() {
   const assignmentTypes = [
     {
-      name: 'assignment',
-      pluralName: 'assignments',
+      name: 'homework',
+      pluralName: 'homework',
       icon: 0,
       color: 6,
     },
@@ -44,7 +44,7 @@ export default function ArticlesTab() {
     {
       id: '1',
       name: 'Example Assignment',
-      type: 'assignment',
+      type: 'homework',
       dateDue: new Date(Date.now() - 1000 * 60 * 60),
     },
     {

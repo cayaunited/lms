@@ -1,9 +1,10 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 
-export default async function createPerson(supabase: SupabaseClient<any, "public", any>, id: string, name: string, role: number) {
+export default async function createPerson(supabase: SupabaseClient<any, 'public', any>, id: string, name: string, email: string, role: number) {
   const { error: peopleError } = await supabase.from('people').insert({
     id,
     name,
+    email,
     role,
     avatar: 0,
   });

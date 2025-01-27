@@ -61,11 +61,17 @@ export default function SignIn({ signInWithEmail }: { signInWithEmail: any }) {
     if (!data.length) {
       let name = window.localStorage.getItem('nameForSignIn')
         || window.prompt('What is your name?');
+      let email = window.localStorage.getItem('emailForSignIn')
+        || window.prompt('What is your email?');
       let role = window.localStorage.getItem('roleForSignIn')
         || window.prompt('What is your role? Either "student" or "teacher"', 'student');
+      
       window.localStorage.removeItem('nameForSignIn');
+      window.localStorage.removeItem('emailForSignIn');
       window.localStorage.removeItem('roleForSignIn');
-      const creationError = await createPerson(supabase, userData.user.id, name ?? '', role === 'teacher' ? 1 : 0);
+      
+      const creationError = await createPerson(supabase,
+        userData.user.id, name ?? '', email ?? '', role === 'teacher' ? 1 : 0);
       
       if (creationError) {
         showNotification(false, 'Failed to sign in', `${peopleError}`);

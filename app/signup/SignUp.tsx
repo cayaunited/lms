@@ -56,6 +56,7 @@ export default function SignUp({ signUpWithEmail }: { signUpWithEmail: any }) {
     try {
       const error = await signUpWithEmail(name, email, role, password);
       window.localStorage.setItem('nameForSignIn', name);
+      window.localStorage.setItem('emailForSignIn', email);
       window.localStorage.setItem('roleForSignIn', role);
       
       if (error && error !== '42501') {

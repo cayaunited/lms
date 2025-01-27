@@ -100,7 +100,7 @@ export default function Article({ courseID, articleID }: { courseID: string, art
         
         if (articleID === 'new') {
           setArticle({
-            owner: uid,
+            poster: uid,
             name: 'New Article',
             dateCreated: new Date(),
             dateUpdated: new Date(),
@@ -119,11 +119,11 @@ export default function Article({ courseID, articleID }: { courseID: string, art
             return;
           }
           
-          const { name, date_created, date_updated, content } = articleData[0];
+          const { poster_id, name, date_created, date_updated, content } = articleData[0];
           
           setArticle({
             id: articleID,
-            owner: uid,
+            poster: poster_id,
             name,
             dateCreated: new Date(date_created),
             dateUpdated: new Date(date_updated),
@@ -142,7 +142,7 @@ export default function Article({ courseID, articleID }: { courseID: string, art
   }, [articleEditor]);
   
   const canApprove = user?.role > 0;
-  const canEdit = canApprove || article?.owner === user?.id;
+  const canEdit = canApprove || article?.poster === user?.id;
   
   const saveArticle = async ({ name }: { name: string }) => {
     const content = articleEditor.getHTML();
@@ -157,7 +157,7 @@ export default function Article({ courseID, articleID }: { courseID: string, art
         const { error: insertError } = await supabase.from('articles').insert({
           id,
           course_id: courseID,
-          owner: user.id,
+          poster_id: user.id,
           name,
           date_created: new Date(),
           date_updated: new Date(),

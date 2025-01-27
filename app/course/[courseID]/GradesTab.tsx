@@ -35,8 +35,8 @@ export default function GradesTab() {
   
   const assignmentTypes = [
     {
-      name: 'assignment',
-      pluralName: 'assignments',
+      name: 'homework',
+      pluralName: 'homework',
       icon: 0,
       color: 6,
       weight: 25,
@@ -54,32 +54,32 @@ export default function GradesTab() {
     {
       id: '1',
       name: 'Example Assignment 1',
-      assignment: 10,
+      homework: 10,
     },
     {
       id: '2',
       name: 'Example Assignment 2',
-      assignment: 20,
+      homework: 20,
     },
     {
       id: '3',
       name: 'Example Assignment 3',
-      assignment: 30,
+      homework: 30,
     },
     {
       id: '4',
       name: 'Example Assignment 4',
-      assignment: 40,
+      homework: 40,
     },
     {
       id: '5',
       name: 'Example Assignment 5',
-      assignment: 50,
+      homework: 50,
     },
     {
       id: '6',
       name: 'Example Assignment 6',
-      assignment: 45,
+      homework: 45,
     },
     {
       id: '7',
@@ -89,92 +89,92 @@ export default function GradesTab() {
     {
       id: '8',
       name: 'Example Assignment 7',
-      assignment: 40,
+      homework: 40,
     },
     {
       id: '9',
       name: 'Example Assignment 8',
-      assignment: 45,
+      homework: 45,
     },
     {
       id: '10',
       name: 'Example Assignment 9',
-      assignment: 45,
+      homework: 45,
     },
     {
       id: '11',
       name: 'Example Assignment 10',
-      assignment: 60,
+      homework: 60,
     },
     {
       id: '12',
       name: 'Example Assignment 11',
-      assignment: 60,
+      homework: 60,
     },
     {
       id: '13',
       name: 'Example Assignment 12',
-      assignment: 65,
+      homework: 65,
     },
     {
       id: '14',
       name: 'Example Assignment 13',
-      assignment: 65,
+      homework: 65,
     },
     {
       id: '15',
       name: 'Example Assignment 14',
-      assignment: 65,
+      homework: 65,
     },
     {
       id: '16',
       name: 'Example Assignment 15',
-      assignment: 60,
+      homework: 60,
     },
     {
       id: '17',
       name: 'Example Assignment 16',
-      assignment: 55,
+      homework: 55,
     },
     {
       id: '18',
       name: 'Example Assignment 17',
-      assignment: 70,
+      homework: 70,
     },
     {
       id: '19',
       name: 'Example Assignment 18',
-      assignment: 70,
+      homework: 70,
     },
     {
       id: '20',
       name: 'Example Assignment 19',
-      assignment: 75,
+      homework: 75,
     },
     {
       id: '21',
       name: 'Example Assignment 20',
-      assignment: 70,
+      homework: 70,
     },
     {
       id: '22',
       name: 'Example Assignment 21',
-      assignment: 75,
+      homework: 75,
     },
     {
       id: '23',
       name: 'Example Assignment 22',
-      assignment: 80,
+      homework: 80,
     },
     {
       id: '24',
       name: 'Example Assignment 23',
-      assignment: 80,
+      homework: 80,
     },
     {
       id: '25',
       name: 'Example Assignment 24',
-      assignment: 85,
+      homework: 85,
     },
     {
       id: '26',
@@ -184,12 +184,12 @@ export default function GradesTab() {
     {
       id: '27',
       name: 'Example Assignment 25',
-      assignment: 95,
+      homework: 95,
     },
     {
       id: '28',
       name: 'Example Assignment 26',
-      assignment: 100,
+      homework: 100,
     },
   ];
   
@@ -220,7 +220,7 @@ export default function GradesTab() {
           <Button
             color="blue"
             leftSection={<FontAwesomeIcon icon={faPencil} />}
-          >edit scaling</Button>
+          >edit scale</Button>
           <Button
             color="blue"
             leftSection={<FontAwesomeIcon icon={faPencil} />}
@@ -276,7 +276,7 @@ export default function GradesTab() {
           <Title
             order={3}
             mb="md"
-          >scaling</Title>
+          >scale</Title>
           {gradeScaling.map((scale) => <Text key={scale.threshold}>
             {scale.name} - {scale.threshold}%</Text>)}
         </Card>
@@ -372,10 +372,10 @@ export default function GradesTab() {
             {assignmentGrades.map((assignment) => <Table.Tr key={assignment.id}>
               <Table.Td hiddenFrom="md">
                 <Text fw={700}>{assignment.name}</Text>
-                <Text>{assignment.assignment || assignment.exam}%</Text>
+                <Text>{assignment.homework || assignment.exam}%</Text>
               </Table.Td>
               <Table.Td visibleFrom="md">{assignment.name}</Table.Td>
-              <Table.Td visibleFrom="md">{assignment.assignment || assignment.exam}%</Table.Td>
+              <Table.Td visibleFrom="md">{assignment.homework || assignment.exam}%</Table.Td>
               <Table.Td>
                 <Group justify="end">
                   <Button

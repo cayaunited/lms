@@ -51,7 +51,7 @@ export default function Assignment({ courseID, assignmentID }: { courseID: strin
     mode: 'controlled',
     initialValues: {
       name: '',
-      type: 'assignment',
+      type: 'homework',
       dateDue: new Date(),
       section: 'all',
     },
@@ -243,7 +243,7 @@ export default function Assignment({ courseID, assignmentID }: { courseID: strin
   const assignmentType = (course && course.assignment_types
     && course.assignment_types.find((type: any) => type.name === assignment?.type))
     ?? {
-      name: 'assignment',
+      name: 'homework',
       icon: 0,
       color: 6,
     };

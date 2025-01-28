@@ -96,6 +96,36 @@ export default function Course({ courseID }: { courseID: string }) {
           people[personID].sections = connection.sections;
         }
         
+        const { data: invites, error: invitesError } = await supabase.from('invites_to_courses')
+          .select('person_email, role, sections').eq('course_id', courseID);
+        
+        if (invitesError) {
+          showNotification(false, 'Failed to load course', 'Sorry, we couldn\'t load the course');
+          console.log(connectionsError);
+          return;
+        }
+        
+        for (const invite of invites) {
+          const { person_email, role, sections } = invite;
+          
+          sections.forEach((section: string) => {
+            if (!allSections.includes(section)) allSections.push(section);
+          });
+          
+          if (role == 2) teachers.push(person_email);
+          else if (role == 1) assistants.push(person_email);
+          else students.push(person_email);
+          
+          people[person_email] = {
+            name: `Waiting for ${role === 2 ? 'teacher' : (role === 1 ? 'assistant' : 'student')} to accept invite...`,
+            email: person_email,
+            role,
+            avatar: 0,
+            sections,
+            fromInvite: true,
+          };
+        }
+        
         const { number, name } = courseData[0];
         setCourse({ id: courseID, number, name, allSections, mySections });
         setTeacherIDs(teachers);
@@ -130,9 +160,13 @@ export default function Course({ courseID }: { courseID: string }) {
       <PeopleTab
         user={user}
         course={course}
+        setCourse={setCourse}
         teacherIDs={teacherIDs}
+        setTeacherIDs={setTeacherIDs}
         assistantIDs={assistantIDs}
+        setAssistantIDs={setAssistantIDs}
         studentIDs={studentIDs}
+        setStudentIDs={setStudentIDs}
         peopleByID={peopleByID}
         setPeopleByID={setPeopleByID}
       />

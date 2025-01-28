@@ -19,6 +19,7 @@ import {
   Select,
   Table,
   Tabs,
+  TagsInput,
   Textarea,
   TextInput,
 } from '@mantine/core';
@@ -184,6 +185,12 @@ export default function useTheme() {
       Tabs: Tabs.extend({
         defaultProps: {
           radius: 0,
+        },
+      }),
+      TagsInput: TagsInput.extend({
+        defaultProps: {
+          size: 'md',
+          variant: 'filled',
         },
       }),
       Textarea: Textarea.extend({

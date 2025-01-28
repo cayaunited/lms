@@ -89,23 +89,23 @@ export default function SessionsTab() {
         <form onSubmit={(event) => event.preventDefault()}>
           <DatePickerInput
             label="date"
-            description="today or later"
+            description="Today or later"
             mb="md"
           />
           <TimeInput
             label="start time"
-            description={`between ${sessionValidation.minStartHour} am and ${sessionValidation.maxStartHour12} pm, for some sleep`}
+            description={`Between ${sessionValidation.minStartHour} am and ${sessionValidation.maxStartHour12} pm, for some sleep`}
             mb="md"
           />
           <TimeInput
             label="end time"
-            description={`between ${sessionValidation.minEndHour} am and ${sessionValidation.maxEndHour12} am, for some sleep`}
+            description={`Between ${sessionValidation.minEndHour} am and ${sessionValidation.maxEndHour12} am, for some sleep`}
             mb="md"
           />
           <TextInput
             label="location"
             placeholder="Library"
-            description="please host the session in a public place"
+            description="Please host the session in a public place"
             mb="md"
           />
           <Select

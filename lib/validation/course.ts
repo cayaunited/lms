@@ -16,3 +16,12 @@ export default {
   icon: (value: string) => (Number(value) >= 0 && Number(value) <= icons.length - 1 ? null : 'Must be a valid icon'),
   color: (value: string) => (Number(value) >= 0 && Number(value) <= colors.length - 1 ? null : 'Must be a valid color'),
 };
+
+export const sections = (values: string[]) => {
+  for (let s = 0; s < values.length; s++) {
+    const sectionNumber = values[s];
+    if (sectionNumber.length > 10) return `${sectionNumber} must be 10 characters or less`;
+  }
+  
+  return null;
+};

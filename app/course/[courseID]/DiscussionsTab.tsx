@@ -302,7 +302,7 @@ export default function DiscussionsTab() {
             </form>
           </Box>
           
-          <Box display={visibleDiscussion?.type === 'question' ? 'block' : 'none'}>
+          <Box display={visibleDiscussion && visibleDiscussion.type === 'question' ? 'block' : 'none'}>
             <Group
               justify="space-between"
               mt="md"
@@ -347,48 +347,50 @@ export default function DiscussionsTab() {
             </Paper>)}
           </Box>
           
-          <Group
-            justify="space-between"
-            mt="md"
-          >
-            <Title
-              order={2}
-              className="theme-text"
+          <Box display={selectedDiscussion ? 'block' : 'none'}>
+            <Group
+              justify="space-between"
+              mt="md"
             >
-              comments
-            </Title>
-            <Button
-              hiddenFrom="md"
-              color="green"
-              leftSection={<FontAwesomeIcon icon={faComment} />}
-            >post comment</Button>
-          </Group>
-          <Group>
-            <Button
-              visibleFrom="md"
-              color="green"
+              <Title
+                order={2}
+                className="theme-text"
+              >
+                comments
+              </Title>
+              <Button
+                hiddenFrom="md"
+                color="green"
+                leftSection={<FontAwesomeIcon icon={faComment} />}
+              >post comment</Button>
+            </Group>
+            <Group>
+              <Button
+                visibleFrom="md"
+                color="green"
+                mt="md"
+                leftSection={<FontAwesomeIcon icon={faComment} />}
+              >post comment</Button>
+            </Group>
+            
+            {visibleDiscussion?.comments.map((comment: any, i: number) => <Paper
+              key={comment.id}
+              withBorder
+              p="md"
               mt="md"
-              leftSection={<FontAwesomeIcon icon={faComment} />}
-            >post comment</Button>
-          </Group>
-          
-          {visibleDiscussion?.comments.map((comment: any, i: number) => <Paper
-            key={comment.id}
-            withBorder
-            p="md"
-            mt="md"
-            ml={comment.parent ? 'xl' : 0}
-            style={{ borderColor: comment.fromStudent ? undefined : 'var(--mantine-color-pink-outline)' }}
-          >
-            <Text fw={700}>commented {comment.anonymous ? 'anonymously' : 'by Example Person'}</Text>
-            <Text mb="md">on {formatDateWithTime(comment.dateCreated)}</Text>
-            <RichViewer content={comment.content} />
-            <Button
-              mt="md"
-              color="blue"
-              leftSection={<FontAwesomeIcon icon={faReply} />}
-            >reply</Button>
-          </Paper>)}
+              ml={comment.parent ? 'xl' : 0}
+              style={{ borderColor: comment.fromStudent ? undefined : 'var(--mantine-color-pink-outline)' }}
+            >
+              <Text fw={700}>commented {comment.anonymous ? 'anonymously' : 'by Example Person'}</Text>
+              <Text mb="md">on {formatDateWithTime(comment.dateCreated)}</Text>
+              <RichViewer content={comment.content} />
+              <Button
+                mt="md"
+                color="blue"
+                leftSection={<FontAwesomeIcon icon={faReply} />}
+              >reply</Button>
+            </Paper>)}
+          </Box>
         </Stack>
       </Grid.Col>
     </Grid>
